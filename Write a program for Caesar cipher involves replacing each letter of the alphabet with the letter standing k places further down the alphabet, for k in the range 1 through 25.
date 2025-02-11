@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <ctype.h>
+void caesarCipher(char text[], int k, int encrypt) {
+    for (int i = 0; text[i] != '\0'; i++) {
+        if (isalpha(text[i])) {
+            char base = isupper(text[i]) ? 'A' : 'a';
+            text[i] = (text[i] - base + (encrypt ? k : -k) + 26) % 26 + base;
+        }
+    }
+}
+int main() {
+    char text[] = "Hello, World!";
+    int k = 3;
+    caesarCipher(text, k, 1);
+    printf("Encrypted: %s\n", text);
+    caesarCipher(text, k, 0);
+    printf("Decrypted: %s\n", text);
+    return 0;
+}
+
+
+
+#include <stdio.h>
+void caesarCipher(char str[], int k, int mode) {
+    for (int i = 0; str[i]; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+            str[i] = ((str[i] - 'A' + (mode * k)) % 26 + 26) % 26 + 'A';
+        } else if (str[i] >= 'a' && str[i] <= 'z') {
+            str[i] = ((str[i] - 'a' + (mode * k)) % 26 + 26) % 26 + 'a';
+        }
+    }
+}
+int main() {
+    char str[100];
+    int k, choice;
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    printf("Enter k (1-25): ");
+    scanf("%d", &k);
+    if (k < 1 || k > 25) return 1;
+    printf("Choose operation:\n1. Encryption\n2. Decryption\nChoice: ");
+    scanf("%d", &choice);
+    caesarCipher(str, k, choice == 1 ? 1 : -1);
+    printf("Result: %s", str);
+    return 0;
+}
