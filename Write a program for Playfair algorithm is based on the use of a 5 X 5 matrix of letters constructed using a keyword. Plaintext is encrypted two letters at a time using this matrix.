@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define SIZE 5
+void createMatrix(char *key, char matrix[SIZE][SIZE]) {
+    int k = 0, used[26] = {0};
+    for (int i = 0; key[i]; i++) {
+        char ch = toupper(key[i]);
+        if (isalpha(ch) && !used[ch - 'A'] && ch != 'J') {
+            used[ch - 'A'] = 1;
+            matrix[k / SIZE][k % SIZE] = ch;
+            k++;
+        }
+    }
+    for (char ch = 'A'; ch <= 'Z'; ch++) {
+        if (ch != 'J' && !used[ch - 'A']) {
+            matrix[k / SIZE][k % SIZE] = ch;
+            k++;
+        }
+    }
+}
+void encrypt(char *plaintext, char matrix[SIZE][SIZE], char *ciphertext) {
+    int len = strlen(plaintext);
+    for (int i = 0; i < len; i += 2) {
+        char a = toupper(plaintext[i]), b = (i + 1 < len) ? toupper(plaintext[i + 1]) : 'X';
+        if (a == b) b = 'X';
+        int row1, col1, row2, col2;
+        for (int r = 0; r < SIZE; r++) {
+            for (int c = 0; c < SIZE; c++) {
+                if (matrix[r][c] == a) row1 = r, col1 = c;
+                if (matrix[r][c] == b) row2 = r, col2 = c;
+            }
+        }
+        ciphertext[i] = (row1 == row2) ? matrix[row1][(col1 + 1) % SIZE] : matrix[row1][col2];
+        ciphertext[i + 1] = (row1 == row2) ? matrix[row2][(col2 + 1) % SIZE] : matrix[row2][col1];
+    }
+    ciphertext[len] = '\0';
+}
+int main() {
+    char key[100], plaintext[100], ciphertext[100], matrix[SIZE][SIZE];
+    printf("Enter keyword: ");
+    scanf("%s", key);
+    printf("Enter plaintext: ");
+    scanf("%s", plaintext);
+    createMatrix(key, matrix);
+    encrypt(plaintext, matrix, ciphertext);
+    printf("Ciphertext: %s\n", ciphertext);
+    return 0;
+}
