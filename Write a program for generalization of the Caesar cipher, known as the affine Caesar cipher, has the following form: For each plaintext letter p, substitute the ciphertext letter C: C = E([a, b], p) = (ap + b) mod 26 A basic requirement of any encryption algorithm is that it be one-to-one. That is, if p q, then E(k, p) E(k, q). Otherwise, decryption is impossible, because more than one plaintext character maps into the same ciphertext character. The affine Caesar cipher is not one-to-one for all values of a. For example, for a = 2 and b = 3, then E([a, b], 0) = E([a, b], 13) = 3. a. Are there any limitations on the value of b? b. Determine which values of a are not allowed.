@@ -1,0 +1,27 @@
+#include <stdio.h>
+int is_valid_a(int a) {
+    return a % 26 != 0 && a % 13 != 0;
+}
+int is_valid_b(int b) {
+    return b >= 0 && b < 26; // b should be within the range of 0 to 25
+}
+char affine_encrypt(char p, int a, int b) {
+    return (a * (p - 'A') + b) % 26 + 'A';
+}
+int main() {
+    char plaintext = 'H'; // Example plaintext
+    int a = 5; 
+    int b = 8; 
+    if (is_valid_a(a) && is_valid_b(b)) {
+        char ciphertext = affine_encrypt(plaintext, a, b);
+        printf("Ciphertext: %c\n", ciphertext);
+    } else {
+        if (!is_valid_a(a)) {
+            printf("Invalid value for a: %d. Must not be 0 or 13.\n", a);
+        }
+        if (!is_valid_b(b)) {
+            printf("Invalid value for b: %d. Must be between 0 and 25.\n", b);
+        }
+    }
+    return 0;
+}
