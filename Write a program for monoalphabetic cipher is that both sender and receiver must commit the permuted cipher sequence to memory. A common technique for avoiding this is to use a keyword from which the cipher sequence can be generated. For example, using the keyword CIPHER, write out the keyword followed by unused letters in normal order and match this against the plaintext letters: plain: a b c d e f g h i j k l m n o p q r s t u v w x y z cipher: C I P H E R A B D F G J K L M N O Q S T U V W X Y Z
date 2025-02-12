@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+void generateCipher(const char *keyword, char *cipher) {
+    int used[26] = {0}, idx = 0;
+    for (int i = 0; keyword[i]; i++) if (keyword[i] >= 'A' && keyword[i] <= 'Z' && !used[keyword[i] - 'A']) {
+        cipher[idx++] = keyword[i];
+        used[keyword[i] - 'A'] = 1;
+    }
+    for (char ch = 'A'; ch <= 'Z'; ch++) if (!used[ch - 'A']) cipher[idx++] = ch;
+    cipher[idx] = '\0';
+}
+void encrypt(const char *text, const char *cipher, char *output) {
+    for (int i = 0; text[i]; i++) output[i] = (text[i] >= 'A' && text[i] <= 'Z') ? cipher[text[i] - 'A'] : text[i];
+    output[strlen(text)] = '\0';
+}
+void decrypt(const char *text, const char *cipher, char *output) {
+    for (int i = 0; text[i]; i++) if (text[i] >= 'A' && text[i] <= 'Z') {
+        for (int j = 0; j < 26; j++) if (cipher[j] == text[i]) output[i] = 'A' + j;
+    } else {
+        output[i] = text[i];
+    }
+    output[strlen(text)] = '\0';
+}
+int main() {
+    char cipher[27], encrypted[50], decrypted[50];
+    generateCipher("CIPHER", cipher);
+    encrypt("HELLO WORLD", cipher, encrypted);
+    decrypt(encrypted, cipher, decrypted);
+    printf("Cipher: %s\nEncrypted: %s\nDecrypted: %s\n", cipher, encrypted, decrypted);
+    return 0;
+}
