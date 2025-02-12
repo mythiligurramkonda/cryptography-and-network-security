@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <string.h>
+void encrypt(char *plaintext, char *key) {
+    int textLen = strlen(plaintext);
+    int keyLen = strlen(key);
+    char ciphertext[textLen + 1];
+    for (int i = 0; i < textLen; i++) {
+        char p = plaintext[i] - 'A';
+        char k = key[i % keyLen] - 'A';
+        ciphertext[i] = (p + k) % 26 + 'A';
+    }
+    ciphertext[textLen] = '\0';
+    printf("Ciphertext: %s\n", ciphertext);
+}
+int main() {
+    char plaintext[] = "HELLO";
+    char key[] = "KEY";
+    encrypt(plaintext, key);
+    return 0;
+}
